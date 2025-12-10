@@ -379,10 +379,10 @@ window.renderBranchSelectUI = () => {
     const sel = document.getElementById('global-branch-select');
     if (!sel) return;
     if (branches.length === 0) { sel.innerHTML = '<option>Chưa có CN</option>'; return; }
-    
+
     // Render options
     sel.innerHTML = branches.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
-    
+
     // Set value hiện tại
     if (currentBranchId) sel.value = currentBranchId;
 };
@@ -756,11 +756,11 @@ window.switchView = (view) => {
     if (userRole !== 'admin' && ['inventory', 'reports', 'promos', 'print-settings'].includes(view)) {
         return showToast("⛔ Bạn không có quyền truy cập mục này!", true);
     }
-    
+
     currentView = view;
 
     // 2. CẬP NHẬT TRẠNG THÁI MENU (Active State)
-    
+
     // A. Menu Desktop (Header)
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById(`menu-${view}`)?.classList.add('active');
@@ -773,12 +773,12 @@ window.switchView = (view) => {
     const allViews = ['pos', 'inventory', 'history', 'customers', 'reports', 'promos', 'print-settings'];
     allViews.forEach(v => {
         const el = document.getElementById(`view-${v}`);
-        if(el) el.classList.add('hidden');
+        if (el) el.classList.add('hidden');
     });
 
     // Hiện màn hình được chọn
     const targetView = document.getElementById(`view-${view}`);
-    if(targetView) targetView.classList.remove('hidden');
+    if (targetView) targetView.classList.remove('hidden');
 
     // 4. XỬ LÝ SIDEBAR & GIỎ HÀNG MOBILE (Quan trọng)
     const sidebar = document.getElementById('sidebar-cart');
@@ -786,40 +786,40 @@ window.switchView = (view) => {
 
     if (view === 'pos') {
         // --- TRƯỜNG HỢP: ĐANG Ở MÀN HÌNH BÁN HÀNG ---
-        
+
         // Hiện Sidebar
         if (sidebar) {
             sidebar.classList.remove('hidden', 'md:hidden'); // Xóa các class ẩn
             sidebar.classList.add('md:flex'); // Bắt buộc hiện dạng Flex trên PC
         }
-        
+
         // Hiện thanh giỏ hàng dưới đáy (chỉ hiện trên Mobile do class md:hidden có sẵn trong HTML)
         if (mobileBar) {
-            mobileBar.classList.remove('hidden'); 
+            mobileBar.classList.remove('hidden');
         }
 
     } else {
         // --- TRƯỜNG HỢP: CÁC MÀN HÌNH KHÁC (KHO, BÁO CÁO...) ---
-        
+
         // Ẩn Sidebar tuyệt đối
         if (sidebar) {
             sidebar.classList.add('hidden');       // Ẩn chung
             sidebar.classList.add('md:hidden');    // Cưỡng chế ẩn trên PC
             sidebar.classList.remove('md:flex');   // Gỡ bỏ class hiển thị của PC
-            
+
             // Reset trạng thái trượt của Mobile (Đóng lại nếu đang mở)
-            sidebar.classList.add('translate-x-full'); 
+            sidebar.classList.add('translate-x-full');
         }
-        
+
         // Ẩn thanh giỏ hàng Mobile
         if (mobileBar) {
             mobileBar.classList.add('hidden');
         }
     }
-    
+
     // 5. KHỞI TẠO RIÊNG (Lazy Load)
     // Nếu vào tab Cấu hình in, gọi hàm khởi tạo để load dữ liệu
-    if(view === 'print-settings' && window.initPrintSettings) {
+    if (view === 'print-settings' && window.initPrintSettings) {
         window.initPrintSettings();
     }
 };
@@ -1233,7 +1233,7 @@ window.renderCart = () => {
 
     // Fill Note
     const noteEl = document.getElementById('pos-order-note');
-    if(noteEl) noteEl.value = o.note || '';
+    if (noteEl) noteEl.value = o.note || '';
 
     if (o.items.length === 0) {
         c.innerHTML = `
@@ -1277,7 +1277,7 @@ window.renderCart = () => {
                 </div>
             </div>`).join('');
     }
-    
+
     updateTotals(o);
 
     // Update Mobile Badge
@@ -1989,9 +1989,9 @@ window.renderInventoryTable = () => {
     // 1. Lọc dữ liệu
     const s = document.getElementById('inv-search').value.toLowerCase();
     const bName = branches.find(b => b.id === currentBranchId)?.name || 'N/A';
-    
-    const filtered = products.filter(p => 
-        p.name.toLowerCase().includes(s) || 
+
+    const filtered = products.filter(p =>
+        p.name.toLowerCase().includes(s) ||
         (p.price + '').includes(s)
     );
 
@@ -2012,13 +2012,13 @@ window.renderInventoryTable = () => {
                     </td>
                     <td class="p-4 font-bold text-blue-600">${formatMoney(p.price)}</td>
                     <td class="p-4">
-                        ${p.stock === -1 
-                            ? '<span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-bold">Vô hạn</span>' 
-                            : (p.stock <= 5 
-                                ? `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">${p.stock}</span>` 
-                                : `<span class="bg-slate-100 text-slate-700 px-2 py-1 rounded text-xs font-bold">${p.stock}</span>`
-                              )
-                        }
+                        ${p.stock === -1
+                    ? '<span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-bold">Vô hạn</span>'
+                    : (p.stock <= 5
+                        ? `<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">${p.stock}</span>`
+                        : `<span class="bg-slate-100 text-slate-700 px-2 py-1 rounded text-xs font-bold">${p.stock}</span>`
+                    )
+                }
                     </td>
                     <td class="p-4 text-right">
                         <button onclick="editProduct('${p.id}')" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 hover:bg-blue-50 hover:text-blue-600 transition">
@@ -2037,7 +2037,7 @@ window.renderInventoryTable = () => {
         } else {
             containerMobile.innerHTML = filtered.map(p => {
                 const catName = categories.find(c => c.id === p.category)?.name || 'Chưa phân loại';
-                
+
                 // Badge Tồn kho
                 let stockBadge = '';
                 if (p.stock === -1) stockBadge = '<span class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded border border-purple-100">∞ Vô hạn</span>';
@@ -2074,7 +2074,7 @@ window.renderHistoryTable = () => {
     if (cashierSel && cashierSel.options.length <= 1 && ordersHistory.length > 0) {
         const uniqueCashiers = [...new Set(ordersHistory.map(o => o.cashierName || 'Unknown'))];
         cashierSel.innerHTML = '<option value="all">Thu ngân: Tất cả</option>' + uniqueCashiers.map(n => `<option value="${n}">${n}</option>`).join('');
-        
+
         const branchSel = document.getElementById('filter-branch-history');
         if (branchSel && branches.length > 0) {
             branchSel.innerHTML = '<option value="all">Chi nhánh: Tất cả</option>' + branches.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
@@ -2093,7 +2093,7 @@ window.renderHistoryTable = () => {
         const isDeleted = o.status === 'deleted';
         if (filterStatus === 'active' && isDeleted) return false;
         if (filterStatus === 'deleted' && !isDeleted) return false;
-        
+
         const custName = o.customer ? o.customer.name.toLowerCase() : '';
         const matchText = o.id.toLowerCase().includes(search) || custName.includes(search);
         if (!matchText) return false;
@@ -2103,8 +2103,8 @@ window.renderHistoryTable = () => {
 
         if (startDate || endDate) {
             const orderDate = new Date(o.completedAt?.seconds * 1000); orderDate.setHours(0, 0, 0, 0);
-            if (startDate && orderDate < new Date(startDate).setHours(0,0,0,0)) return false;
-            if (endDate && orderDate > new Date(endDate).setHours(0,0,0,0)) return false;
+            if (startDate && orderDate < new Date(startDate).setHours(0, 0, 0, 0)) return false;
+            if (endDate && orderDate > new Date(endDate).setHours(0, 0, 0, 0)) return false;
         }
         return true;
     });
@@ -2114,7 +2114,7 @@ window.renderHistoryTable = () => {
     // 3. RENDER (TÁCH PC VÀ MOBILE)
     const containerPC = document.getElementById('history-list-pc');
     const containerMobile = document.getElementById('history-list-mobile');
-    
+
     if (!containerPC || !containerMobile) return;
 
     if (filtered.length === 0) {
@@ -2131,11 +2131,11 @@ window.renderHistoryTable = () => {
         const custName = o.customer ? o.customer.name : 'Khách lẻ';
         const dateStr = new Date(o.completedAt?.seconds * 1000).toLocaleString('vi-VN');
         const pmMap = { 'cash': 'Tiền mặt', 'transfer': 'CK', 'gift': 'Voucher' };
-        
+
         let actions = '';
-        if(isDeleted) {
+        if (isDeleted) {
             actions = `<button onclick="customAlert('🛑 Lý do: ${o.deletedReason}')" class="text-xs bg-slate-200 px-2 py-1 rounded">Lý do</button>`;
-            if(userRole === 'admin') actions += `<button onclick="deleteOrderPermanently('${o.id}')" class="ml-2 text-red-500"><i class="fa-solid fa-ban"></i></button>`;
+            if (userRole === 'admin') actions += `<button onclick="deleteOrderPermanently('${o.id}')" class="ml-2 text-red-500"><i class="fa-solid fa-ban"></i></button>`;
         } else {
             actions = `
                 <button onclick="printOrder('${o.id}')" class="text-blue-600 w-8 h-8 rounded hover:bg-blue-50"><i class="fa-solid fa-print"></i></button>
@@ -2145,12 +2145,12 @@ window.renderHistoryTable = () => {
         }
 
         return `<tr class="border-b border-slate-100 transition ${rowClass}">
-            <td class="p-4 font-mono text-xs font-bold text-slate-600">#${o.id} ${isDeleted?'<span class="text-red-500 block">ĐÃ HỦY</span>':''}</td>
+            <td class="p-4 font-mono text-xs font-bold text-slate-600">#${o.id} ${isDeleted ? '<span class="text-red-500 block">ĐÃ HỦY</span>' : ''}</td>
             <td class="p-4 text-xs">${dateStr}</td>
             <td class="p-4 text-sm font-bold text-slate-700">${custName}</td>
             <td class="p-4 text-xs text-slate-500">${o.branchName || '-'}</td>
             <td class="p-4 text-xs text-slate-500">${o.cashierName || '-'}</td>
-            <td class="p-4 text-sm font-black ${isDeleted?'text-slate-400 line-through':'text-blue-600'}">${formatMoney(o.totals?.finalTotal || 0)}<div class="text-[10px] font-normal text-slate-400">${pmMap[o.paymentMethod]||o.paymentMethod}</div></td>
+            <td class="p-4 text-sm font-black ${isDeleted ? 'text-slate-400 line-through' : 'text-blue-600'}">${formatMoney(o.totals?.finalTotal || 0)}<div class="text-[10px] font-normal text-slate-400">${pmMap[o.paymentMethod] || o.paymentMethod}</div></td>
             <td class="p-4 text-right">${actions}</td>
         </tr>`;
     }).join('');
@@ -2160,14 +2160,14 @@ window.renderHistoryTable = () => {
         const isDeleted = o.status === 'deleted';
         const cardClass = isDeleted ? 'bg-slate-100 border-slate-200 grayscale opacity-80' : 'bg-white border-slate-100 shadow-sm';
         const custName = o.customer ? o.customer.name : 'Khách lẻ';
-        const time = new Date(o.completedAt?.seconds * 1000).toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'});
-        const date = new Date(o.completedAt?.seconds * 1000).toLocaleDateString('vi-VN', {day:'2-digit', month:'2-digit'});
+        const time = new Date(o.completedAt?.seconds * 1000).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+        const date = new Date(o.completedAt?.seconds * 1000).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
         const total = formatMoney(o.totals?.finalTotal || 0);
         const pmMap = { 'cash': 'Tiền mặt', 'transfer': 'Chuyển khoản', 'gift': 'Thẻ quà tặng' };
-        
+
         // Mobile Actions (Nút to hơn)
         let actions = '';
-        if(isDeleted) {
+        if (isDeleted) {
             actions = `
                 <button onclick="customAlert('🛑 Lý do xóa: ${o.deletedReason}')" class="flex-1 py-2 bg-slate-200 text-slate-600 rounded-lg text-xs font-bold">Xem lý do</button>
             `;
@@ -2190,7 +2190,7 @@ window.renderHistoryTable = () => {
                 </div>
                 <div class="text-right">
                     <div class="text-lg font-black ${isDeleted ? 'text-slate-400 line-through' : 'text-blue-600'}">${total}</div>
-                    <div class="text-[10px] font-bold text-slate-400 uppercase bg-slate-100 px-1.5 py-0.5 rounded inline-block">${pmMap[o.paymentMethod]||o.paymentMethod}</div>
+                    <div class="text-[10px] font-bold text-slate-400 uppercase bg-slate-100 px-1.5 py-0.5 rounded inline-block">${pmMap[o.paymentMethod] || o.paymentMethod}</div>
                 </div>
             </div>
 
@@ -2205,7 +2205,7 @@ window.renderHistoryTable = () => {
         </div>
         `;
     }).join('');
-}; 
+};
 
 
 window.renderStats = () => {
@@ -2629,18 +2629,29 @@ window.setPaymentMethod = (m) => { paymentMethod = m; document.querySelectorAll(
 window.calculateChange = () => { document.getElementById('cash-change').textContent = formatMoney(getCleanValue('cash-given') - parseInt(document.getElementById('modal-total-amount').textContent.replace(/\D/g, ''))); };
 // Hàm chọn tiền nhanh (Cộng dồn)
 window.setQuickCash = (v) => {
-    // 1. Lấy giá trị hiện tại trong ô input (dùng hàm getCleanValue có sẵn để lấy số thô)
+    // Lấy giá trị hiện tại trước
     const currentVal = getCleanValue('cash-given');
 
-    // 2. Cộng dồn giá trị mới vào giá trị cũ
-    const newVal = currentVal + v;
+    let newVal = 0; // khai báo chung để dùng sau
 
-    // 3. Format lại thành dạng tiền tệ (có dấu phẩy) và gán vào input
+    if (v === 'full') {
+        const full = Number(
+            document.getElementById('modal-total-amount')
+                .textContent.replace(/[^\d]/g, '')
+        );
+        v = full;
+        newVal = v; // gán trực tiếp
+    } else {
+        newVal = currentVal + v; // giờ currentVal đã tồn tại
+    }
+
+    // Format lại tiền và gán vào input
     document.getElementById('cash-given').value = newVal.toLocaleString('en-US');
 
-    // 4. Tính lại tiền thừa ngay lập tức
+    // Tính lại tiền thừa
     calculateChange();
 };
+
 window.checkGiftCard = () => { const c = document.getElementById('gift-code-input').value.toUpperCase(), g = giftCards.find(x => x.code === c && x.status === 'active'), t = parseInt(document.getElementById('modal-total-amount').textContent.replace(/\D/g, '')); const s = document.getElementById('gift-status'); if (g) { s.textContent = g.value >= t ? `Đủ tiền (${formatMoney(g.value)})` : `Thiếu ${formatMoney(t - g.value)}`; s.className = g.value >= t ? "mt-4 text-center text-sm font-bold text-emerald-600" : "mt-4 text-center text-sm font-bold text-orange-500"; } else { s.textContent = "Thẻ lỗi"; s.className = "mt-4 text-center text-sm font-bold text-red-500"; } };
 
 // --- PRINTING ENGINE (CORE) ---
@@ -2660,8 +2671,8 @@ window.printReceiptData = (order) => {
             <div style="border-bottom: 1px dashed #eee; padding: 5px 0;">
                 <div class="item-name" style="font-weight:bold; font-size: 11px;">${i.name}</div>
                 <div class="item-meta" style="display:flex; justify-content:space-between; font-size:10px;">
-                    <span>${i.qty} x ${formatMoney(i.price).replace('₫','')}</span>
-                    <span style="font-weight:bold">${formatMoney(i.price * i.qty).replace('₫','')}</span>
+                    <span>${i.qty} x ${formatMoney(i.price).replace('₫', '')}</span>
+                    <span style="font-weight:bold">${formatMoney(i.price * i.qty).replace('₫', '')}</span>
                 </div>
             </div>
         `).join('');
@@ -2685,19 +2696,19 @@ window.printReceiptData = (order) => {
     const custName = order.customer ? order.customer.name : 'Khách lẻ';
     const custPhone = order.customer ? (userRole === 'admin' ? order.customer.phone : maskPhone(order.customer.phone)) : '';
     const ptsEarned = order.pointsEarned || 0;
-    
+
     let currentPts = "...";
     if (order.customer) {
         const cSync = customers.find(c => c.id === order.customer.id);
         if (cSync) currentPts = formatMoney(cSync.points || 0).replace('₫', '');
     }
 
-    let givenVal = finalVal; 
+    let givenVal = finalVal;
     let changeVal = 0;
-    
+
     const cashGivenEl = document.getElementById('cash-given');
     const pmRaw = order.paymentMethod || 'cash';
-    
+
     if (currentView === 'pos' && cashGivenEl && pmRaw === 'cash') {
         const inputVal = getCleanValue('cash-given');
         if (inputVal >= finalVal) {
@@ -2729,7 +2740,7 @@ window.printReceiptData = (order) => {
 
     // --- D. MAP DATA ---
     const mapData = {
-        shopName: currentBranch?.name || "POS SYSTEM", 
+        shopName: currentBranch?.name || "POS SYSTEM",
         orderId: order.id,
         date: dateObj.toLocaleDateString('vi-VN'),
         time: dateObj.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
@@ -2741,7 +2752,7 @@ window.printReceiptData = (order) => {
         subtotal: formatMoney(subtotalVal).replace('₫', ''),
         discount: formatMoney(discountVal).replace('₫', ''),
         total: formatMoney(finalVal).replace('₫', ''),
-        rawTotal: finalVal, 
+        rawTotal: finalVal,
         given: formatMoney(givenVal).replace('₫', ''),
         change: formatMoney(changeVal).replace('₫', ''),
         paymentMethod: pmDisplay,
@@ -2764,13 +2775,13 @@ window.printReceiptData = (order) => {
             printWindow.document.open();
             printWindow.document.write(template);
             printWindow.document.close();
-            
+
             // Đợi tải ảnh rồi in
             printWindow.onload = () => {
                 printWindow.focus();
                 printWindow.print();
                 // Tùy chọn: Tự đóng sau khi in (nhiều trình duyệt chặn cái này)
-                printWindow.close(); 
+                printWindow.close();
             };
         } else {
             showToast("⚠️ Trình duyệt đã chặn cửa sổ bật lên (Popup)!", true);
@@ -3099,17 +3110,17 @@ const originalInit = window.initPrintSettings;
 window.initPrintSettings = () => {
     // 1. Logic cũ: Load trạng thái nút in popup
     const toggle = document.getElementById('cfg-auto-print-popup');
-    if(toggle) toggle.checked = localStorage.getItem('pos_use_popup_print') === 'true';
+    if (toggle) toggle.checked = localStorage.getItem('pos_use_popup_print') === 'true';
 
     // 2. Logic Load Config từ Branch
     const select = document.getElementById('print-template-select');
     const editor = document.getElementById('print-code-editor');
-    
+
     if (!select || !editor) return;
 
     // Tìm chi nhánh hiện tại
     const currentBranch = branches.find(b => b.id === currentBranchId);
-    
+
     // Lấy config (hoặc mặc định)
     const defaultConfig = { type: 'k80', code: TEMPLATE_K80, formValues: {} };
     const config = currentBranch?.printConfig || defaultConfig;
@@ -3121,11 +3132,11 @@ window.initPrintSettings = () => {
     // B. ĐỔ DỮ LIỆU NGƯỢC LẠI VÀO FORM (MỚI)
     if (config.formValues) {
         const f = config.formValues;
-        
+
         // Helper function để gán giá trị an toàn (tránh lỗi nếu ID không tồn tại)
         const setVal = (id, val) => {
             const el = document.getElementById(id);
-            if(el) el.value = val || '';
+            if (el) el.value = val || '';
         };
 
         setVal('cfg-shop-name', f.shopName);
@@ -3133,22 +3144,22 @@ window.initPrintSettings = () => {
         setVal('cfg-shop-phone', f.shopPhone);
         setVal('cfg-shop-logo', f.shopLogo);
         setVal('cfg-shop-fb', f.shopFb);
-        
+
         setVal('cfg-bank-qr', f.bankQr);
         setVal('cfg-bank-name', f.bankName);
         setVal('cfg-bank-num', f.bankNum);
         setVal('cfg-bank-owner', f.bankOwner);
-        
+
         setVal('cfg-footer-text', f.footerText);
-        
+
         // Cấu hình giao diện
         setVal('cfg-font-size', f.fontSize || '12px');
         setVal('cfg-font-family', f.fontFamily || 'system-ui, sans-serif');
         setVal('cfg-logo-size', f.logoSize || '50');
-        
+
         // Cập nhật label hiển thị % của thanh trượt logo
         const logoLabel = document.getElementById('disp-logo-size');
-        if(logoLabel) logoLabel.textContent = (f.logoSize || '50') + '%';
+        if (logoLabel) logoLabel.textContent = (f.logoSize || '50') + '%';
     }
 
     // C. Cập nhật Preview
@@ -3527,7 +3538,7 @@ window.savePrintSettings = async () => {
     // 3. Lấy dữ liệu cơ bản
     const code = document.getElementById('print-code-editor').value;
     const type = document.getElementById('print-template-select').value;
-    
+
     // 4. LẤY DỮ LIỆU TỪ FORM (MỚI)
     // Gom tất cả giá trị input vào một object để lưu trữ
     const formValues = {
@@ -3536,14 +3547,14 @@ window.savePrintSettings = async () => {
         shopPhone: document.getElementById('cfg-shop-phone').value,
         shopLogo: document.getElementById('cfg-shop-logo').value,
         shopFb: document.getElementById('cfg-shop-fb').value,
-        
+
         bankQr: document.getElementById('cfg-bank-qr').value,
         bankName: document.getElementById('cfg-bank-name').value,
         bankNum: document.getElementById('cfg-bank-num').value,
         bankOwner: document.getElementById('cfg-bank-owner').value,
-        
+
         footerText: document.getElementById('cfg-footer-text').value,
-        
+
         // Cấu hình giao diện
         fontSize: document.getElementById('cfg-font-size').value,
         fontFamily: document.getElementById('cfg-font-family').value,
@@ -3551,9 +3562,9 @@ window.savePrintSettings = async () => {
     };
 
     // 5. Tạo cấu hình đầy đủ
-    const config = { 
-        type, 
-        code, 
+    const config = {
+        type,
+        code,
         formValues // Lưu kèm object này
     };
 
@@ -3565,10 +3576,10 @@ window.savePrintSettings = async () => {
         });
 
         showToast(`✅ Đã lưu mẫu in và cấu hình!`);
-        
+
         // Cập nhật state cục bộ
         const currentBranch = branches.find(b => b.id === currentBranchId);
-        if(currentBranch) currentBranch.printConfig = config;
+        if (currentBranch) currentBranch.printConfig = config;
 
     } catch (e) {
         console.error(e);
@@ -3683,7 +3694,7 @@ window.switchView = (view) => {
 
     // --- CẬP NHẬT BADGE TRÊN THANH NAV MỚI ---
     const totalQty = o.items.reduce((sum, i) => sum + i.qty, 0);
-    
+
     // Cập nhật cho thanh điều hướng mới
     const navBadge = document.getElementById('mob-nav-cart-count');
     if (navBadge) {
@@ -3695,7 +3706,20 @@ window.switchView = (view) => {
 
 
 const sb = document.getElementById('sidebar-cart'), h = document.getElementById('resize-handle');
-h.addEventListener('mousedown', e => { e.preventDefault(); document.addEventListener('mousemove', rs); document.addEventListener('mouseup', sp); document.body.style.cursor = 'col-resize'; h.classList.add('resizing'); });
+// document.addEventListener('DOMContentLoaded', () => {
+//     const h = document.querySelector('.handle');
+//     if (h) {
+//     h.addEventListener('mousedown', e => {
+//         e.preventDefault();
+//         document.addEventListener('mousemove', rs);
+//         document.addEventListener('mouseup', sp);
+//         document.body.style.cursor = 'col-resize';
+//         h.classList.add('resizing');
+//     });
+// } else {
+//     console.error('Element h not found!');
+// }
+// });
 function rs(e) { const w = window.innerWidth - e.clientX; if (w >= 320 && w <= 600) sb.style.width = `${w}px`; }
 function sp() { document.removeEventListener('mousemove', rs); document.removeEventListener('mouseup', sp); document.body.style.cursor = ''; h.classList.remove('resizing'); }
 
